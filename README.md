@@ -1,87 +1,95 @@
-# Dashboard de Métricas de Site / Site Metrics Dashboard
+# dashboard-metricas-site
 
-Dashboard de métricas de site com React 18, TypeScript e Chart.js. Mostra três gráficos de linha: visitas, taxa de conversão e taxa de rejeição (bounce). Os dados são sintéticos e determinísticos: a mesma versão produz sempre os mesmos valores e datas (não há `Math.random()` nem `Date.now()`), o que torna o comportamento previsível em testes e em novas compilações.
+![JavaScript/TypeScript](https://img.shields.io/badge/JS-TS-yellow?logo=javascript)   ![status: concluido](https://img.shields.io/badge/status-concluido-green)   ![licenca: MIT](https://img.shields.io/badge/licenca-MIT-blue)
 
-## PT-BR
+## Resumo
 
-### Descrição
+Aplicacao web em JavaScript/TypeScript. Projeto funcional, dashboard-metricas-site
 
-Aplicação de front-end de página única que exibe cartões resumo (visitas, conversão, rejeição) e três gráficos de linha com os últimos 30 dias de métricas de um site. Útil como base para dashboards reais substituindo o gerador de dados por uma API.
+## Problema / por que existe
 
-### Stack
+O projeto entrega uma interface ou utilitario web para um recorte especifico, com foco em navegador como ambiente de execucao e sem dependencia de servidor proprio.
 
-- React 18 + TypeScript (strict)
-- Chart.js + react-chartjs-2
-- Vite (build e dev server)
-- Vitest + jsdom (testes)
+## Arquitetura
 
-### Como usar
+- Camada de apresentacao: componentes e paginas que renderizam a interface.
+- Camada de logica: funcoes e hooks que processam dados e estado.
+- Comunicacao: requisicoes HTTP a APIs externas ou dados locais, quando aplicavel.
 
-```bash
+O build e feito com Vite (ou ferramenta equivalente), gerando arquivos estaticos prontos para hospedagem.
+
+## Tecnologias
+
+- JavaScript / TypeScript
+- react
+- react-dom
+- chart.js
+- react-chartjs-2
+- @vitejs/plugin-react
+- @testing-library/react
+- @testing-library/jest-dom
+- @types/react
+- @types/react-dom
+- jsdom
+- typescript
+- vite
+- vitest
+
+- Sem CI configurado neste repositorio.
+
+O repositorio contem testes automatizados.
+
+## O que faz
+
+Projeto funcional, dashboard-metricas-site
+
+## Como rodar
+
+Requisitos: Node.js e npm (ou yarn/pnpm).
+
+```
+# instalar dependencias
 npm install
-npm run dev        # servidor de desenvolvimento
-npm run build      # tsc --noEmit + build de produção
-npm test           # suíte de testes (vitest run)
-npm run preview    # pré-visualiza o build
+
+# rodar em desenvolvimento
+vite
+
+# build para producao
+tsc --noEmit && vite build
+
+# rodar testes
+vitest run
 ```
 
-### Testes
+## Estrutura do projeto
 
-13 testes em 3 arquivos, cobrindo geração de dados, montagem de datasets do Chart.js e renderização do componente `VisitsChart`:
+- src/ (11 arquivo(s))
+- test/ (4 arquivo(s))
+- .gitignore, BRIEF.md, index.html, package-lock.json, package.json, README.en.md, README.md, tsconfig.json, vite.config.ts
 
-- `test/data/metrics.test.ts` — 9 testes
-- `test/lib/chartUtils.test.ts` — 3 testes
-- `test/components/VisitsChart.test.tsx` — 1 teste
 
-Todos determinísticos; não há mocks de API nem dependência de rede.
+## Trade-offs e decisões
 
-### Licença
+- Build estatico: facil de hospedar (GitHub Pages, Vercel, Netlify) sem servidor.
+- Dependencias minimas para reduzir superficie de manutencao.
+- Navegador como unico ambiente de execucao necessario.
 
-MIT
+## Limitações conhecidas
 
-### Autor
+- Funciona no navegador; depende de conexao a internet para recursos externos.
 
-Kelvin Oliveira
 
----
+## Testes
 
-## EN
-
-### Description
-
-Single-page front-end application that shows summary cards (visits, conversion, bounce) and three line charts with the last 30 days of site metrics. Useful as a base for real dashboards; replace the synthetic data generator with an API.
-
-### Stack
-
-- React 18 + TypeScript (strict)
-- Chart.js + react-chartjs-2
-- Vite (dev server and production build)
-- Vitest + jsdom (tests)
-
-### How to use
-
-```bash
-npm install
-npm run dev        # development server
-npm run build      # tsc --noEmit + production build
-npm test           # test suite (vitest run)
-npm run preview    # preview the production build
+```
+vitest run
 ```
 
-### Tests
+## Licença
 
-13 tests in 3 files, covering data generation, Chart.js dataset building, and `VisitsChart` component rendering:
+Distribuído sob a licenca MIT. Consulte o arquivo `LICENSE` do repositorio.
 
-- `test/data/metrics.test.ts` — 9 tests
-- `test/lib/chartUtils.test.ts` — 3 tests
-- `test/components/VisitsChart.test.tsx` — 1 test
+## Autor
 
-All deterministic; no API mocks, no network dependency.
-
-### License
-
-MIT
-
-### Author
-
-Kelvin Oliveira
+Kelvin Oliveira, https://github.com/KelvinOliveiraCode
+Portfolio: https://kelvinoliveiracode.github.io/portfolio/
