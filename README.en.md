@@ -1,127 +1,100 @@
 # dashboard-metricas-site
 
-<div align="center">
-
 **English** · [Português (Brasil)](README.md)
 
-</div>
-
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![React 18](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/) [![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite&logoColor=white)](https://vitejs.dev/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/) [![MIT License](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)](LICENSE)
-
-### Projeto funcional ,  dashboard-metricas-site
-
----
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?style=flat-square&logo=typescript&logoColor=white) ![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react) ![Chart.js](https://img.shields.io/badge/Chart.js-4-FF6384?style=flat-square&logo=chartdotjs) ![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=flat-square&logo=vite) ![Vitest](https://img.shields.io/badge/Vitest-13%20tests-6E9F18?style=flat-square&logo=vitest) ![MIT](https://img.shields.io/badge/License-MIT-f4c430?style=flat-square)
 
 ## What it is
 
-Projeto funcional ,  dashboard-metricas-site
+**A website metrics dashboard**: a **React 18 + TypeScript SPA** with **Chart.js** charts (via `react-chartjs-2`) for visits, conversions and bounce. The data is **synthetic and deterministic** (fixed epoch 2026-01-01, no `Math.random()`), which makes tests and demos reproducible. It is an educational visualisation lab.
 
----
+## Status
 
-## Quick Start
+A working prototype; **13 tests passing** and a confirmed production build (~105 kB gzip).
 
-```bash
-# Clone and enter
-git clone https://github.com/KelvinOliveiraCode/<repo>.git
-cd <repo>
+## Features
 
-# Install dependencies
-npm install
+- **Metric cards** (`MetricCard.tsx`): a summary per indicator.
+- **Charts** (`VisitsChart.tsx`, `ConversionChart.tsx`, `BounceChart.tsx`): time series with `ChartCard` as the frame.
+- **Chart.js registration** (`lib/chartRegistry.ts`): registers the ESM build's scales/controllers (required in both the app and the tests).
+- **Utilities** (`lib/chartUtils.ts`): series-formatting helpers.
+- **Data** (`data/metrics.ts`): deterministic synthetic series — everything derives from a fixed seed + index, dates with a fixed epoch, values rounded to 2 decimals.
 
-# Development server
-npm run dev
+## Architecture
 
-# Production build
-npm run build
+A React SPA (Vite). `App.tsx` composes the `ChartCard`s; data comes from `data/metrics.ts` (swappable for an API); Chart.js is registered once via `chartRegistry`.
 
-# Run tests
-npm test
+```mermaid
+flowchart LR
+    DATA[data/metrics.ts - deterministic series] --> APP[App.tsx]
+    APP --> MC[MetricCard]
+    APP --> VC[VisitsChart] & CC[ConversionChart] & BC[BounceChart]
+    VC & CC & BC --> CH[ChartCard - Chart.js]
+    REG[chartRegistry - register] --> CH
 ```
 
-## How it works
+## Stack
 
-Arquitetura de componente em arquivo único (`App.tsx`): toda a UI, estado e lógica vivem em um arquivo para simplicidade de deploy e build zero-config.
+- React 18.3, TypeScript ~5.6
+- Chart.js 4.4 + react-chartjs-2 5.3
+- Vite 5.4, Vitest 2.1
 
-Decisões arquiteturais principais:
-- **Estado global** via `useState` + `useMemo` (evita overhead do Context API)
-- **Agregações memoizadas** para gráficos e insights
-- **Dados mock in-line** como constantes TypeScript para prototipagem sem backend
-- **IA baseada em regras** (`getAIResponse`) ,  determinística, offline, custo zero
+## Repository layout
 
----
+```
+dashboard-metricas-site/
+├── src/
+│   ├── components/      # MetricCard, ChartCard, Visits/Conversion/BounceChart
+│   ├── data/metrics.ts  # deterministic synthetic series
+│   ├── lib/             # chartRegistry, chartUtils
+│   └── App.tsx · main.tsx · types.ts
+├── test/                # 3 suites (13 tests)
+├── index.html · vite.config.ts
+└── package.json
+```
 
-## Capabilities
+## Prerequisites and installation
 
-| Capacidade | Descrição |
-|------------|-------------|
-| Dashboard | 6 cards de métricas (Saldo, Receitas, Despesas, Economia, Investimentos, Patrimônio) |
-| Fluxo de Caixa | Gráfico de barras (7d/30d) com Recharts ,  Receitas, Despesas, Saldo por período |
-| Orçamentos | Orçamentos por categoria com barras de progresso, alertas de estouro |
-| Metas | Anéis de progresso com cálculo de economia mensal e contagem regressiva |
-| Assistente IA | Chat baseado em regras (getAIResponse) ,  análise de gastos, dicas, projeções |
-| Insights | Alertas automáticos: picos de delivery, crescimento patrimonial, breakdown por categoria |
-| Transações | Adicionar/editar receitas/despesas com categorias, tags, seletor de data |
-| Persistência | localStorage ,  estado sobrevive a reload, zero backend |
+Node.js ≥ 18.
 
+```bash
+npm install
+```
 
----
+## How to run
 
+```bash
+npm run dev        # dev server
+npm run build      # production build (tsc + vite)
+npm run preview    # serve the build
+```
 
+## Tests and quality
 
----
+Real commands (verified by the agent):
 
-## FAQ
+```bash
+npm test
+# Test Files  3 passed · Tests  13 passed (13)
 
-<details>
-<summary><strong>What is this project?</strong></summary>
+npm run build
+# ✓ built in ~2s (bundle ~311 kB, ~105 kB gzip)
+```
 
-A React/TypeScript study/project demonstrating core concepts.
+## Technical decisions and trade-offs
 
-</details>
+- **Deterministic data** (fixed epoch, no Math.random): stable tests and screenshots; the trade-off is needing an API for real data.
+- **Explicit chartRegistry**: Chart.js in ESM does not auto-register controllers/scales — registering manually avoids surprises in build and tests.
 
-<details>
-<summary><strong>How do I run it?</strong></summary>
+## Known limitations and roadmap
 
-See [Quick Start](#quick-start) for copy-paste commands.
+- Data is fixed in `data/metrics.ts` (no analytics backend/API).
+- Line charts only (no bar/doughnut by default).
 
-</details>
+## Development process
 
-<details>
-<summary><strong>Are there tests?</strong></summary>
+An individual project by Kelvin Oliveira, built with orchestrated AI agents and reviewed by the author.
 
-No automated tests in this repository.
+## License and author
 
-</details>
-
-<details>
-<summary><strong>Can I use this in production?</strong></summary>
-
-This is a **study/portfolio project**. Review and harden (auth, persistence, monitoring, etc.) before production use.
-
-</details>
-
-
-
----
-
-## Documentation
-
-- **Source Code** ,  Browse the `src/` directory for implementation details
-- **API Reference** ,  TypeScript types in source
-- **Architecture Diagram** ,  See [architecture.mermaid](docs/architecture.mermaid) (if present)
-- **Changelog** ,  [CHANGELOG.md](CHANGELOG.md) (if present)
-- **Contributing** ,  [CONTRIBUTING.md](CONTRIBUTING.md) (if present)
-
-## License
-
-[MIT](LICENSE) ,  Kelvin Oliveira
-
----
-
-<div align="center">
-
-**Built with** · TypeScript + React + Vite + Tailwind
-
-**Author** · [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
-
-</div>
+MIT — Copyright (c) 2026 Kelvin Oliveira. Author: [Kelvin Oliveira](https://github.com/KelvinOliveiraCode) · [Portfolio](https://kelvinoliveiracode.github.io/portfolio/)
